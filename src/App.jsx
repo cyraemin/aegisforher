@@ -36,9 +36,18 @@ export default function App() {
   const [suggestions, setSuggestions] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
   const [liveStats, setLiveStats] = useState({});
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    if (isAdmin) {
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    if (user?.email === 'tamsilsamira@gmail.com') {
       const fetchStats = async () => {
         const { data: records } = await supabase.from('survey_responses').select('*');
         const stats = {};
@@ -55,12 +64,7 @@ export default function App() {
       };
       fetchStats();
     }
-  }, [isAdmin]);
-
-  const handleAdmin = () => {
-    const key = prompt("Enter Admin Key:");
-    if (key === 'aegis2026') setIsAdmin(true);
-  };
+  }, [isAdmin, user]);
 
   const submitFinal = async () => {
     await supabase.from('survey_responses').insert([formData]);
@@ -76,12 +80,15 @@ export default function App() {
           <h1 className="text-3xl font-light text-[#bcaaa4]">AEGIS FOR HER</h1>
           <p className="text-xs uppercase tracking-[0.3em] text-[#a1887f]">Global Safety Research Project</p>
         </div>
-        <button onClick={handleAdmin} className="bg-[#f4d1d1] px-6 py-2 rounded-full text-sm font-bold">Admin</button>
+        {user?.email === 'tamsilsamira@gmail.com' && (
+          <button onClick={() => setIsAdmin(!isAdmin)} className="bg-[#f4d1d1] px-6 py-2 rounded-full text-sm font-bold">
+            {isAdmin ? "Back to Survey" : "Admin Dashboard"}
+          </button>
+        )}
       </div>
 
       {!isAdmin ? (
         <div className="max-w-xl mx-auto bg-white p-10 rounded-[3rem] shadow-sm border border-[#f0e6e6]">
-          {/* ... (keep your existing survey form logic here) ... */}
           {step < questions.length ? (
             <div>
               <p className="text-xs text-[#a1887f] mb-4 font-bold tracking-widest uppercase">Question {step + 1} of 15</p>
