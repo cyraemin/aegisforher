@@ -20,13 +20,15 @@ const questions = [
   { id: 'q15', text: "Do you feel platforms provide adequate safety features?", options: ["Yes", "Somewhat", "No"] }
 ];
 
-const COLORS = ['#5d4037', '#8d6e63', '#a1887f', '#bcaaa4', '#d7ccc8'];
+const COLORS = ['#f4d1d1', '#c8e6c9', '#fff9c4', '#b3e5fc', '#d1c4e9'];
 
+// Retro-aesthetic classes
 const aesthetic = {
-  container: "min-h-screen bg-[#fdfaf6] p-6 font-serif text-[#5d4037]",
-  button: "w-full p-4 mb-3 rounded-2xl text-left border transition-all duration-300",
-  activeBtn: "bg-[#f4d1d1] border-[#eec0c0] text-[#5d4037] font-bold",
-  inactiveBtn: "bg-white hover:bg-[#fdfaf6] border-[#f0e6e6]"
+  page: "min-h-screen bg-[#fdfaf6] p-6 font-mono text-[#5d4037]",
+  window: "bg-[#fffef9] border-2 border-[#5d4037] shadow-[8px_8px_0px_0px_rgba(93,64,55,0.2)] p-6 rounded-sm",
+  windowHeader: "flex items-center gap-2 mb-6 border-b-2 border-[#5d4037] pb-2",
+  button: "w-full p-3 border border-[#5d4037] hover:bg-[#f4d1d1] transition-all text-left mb-2",
+  activeBtn: "bg-[#f4d1d1] font-bold"
 };
 
 export default function App() {
@@ -81,69 +83,77 @@ export default function App() {
   };
 
   return (
-    <div className={aesthetic.container}>
-      <div className="flex justify-between items-center mb-10 max-w-4xl mx-auto">
+    <div className={aesthetic.page}>
+      {/* Navbar/Header */}
+      <div className="max-w-4xl mx-auto mb-8 flex justify-between items-end border-b-4 border-[#5d4037] pb-4">
         <div>
-          <h1 className="text-3xl font-light text-[#bcaaa4]">AEGIS FOR HER</h1>
-          <p className="text-xs uppercase tracking-[0.3em] text-[#a1887f]">Global Safety Research Project</p>
+          <h1 className="text-4xl font-bold tracking-tighter">AEGIS RESEARCH</h1>
+          <p className="text-sm">Global Safety & Digital Integrity Project</p>
         </div>
-        
         {user ? (
-          user.email === 'tamsilsamira@gmail.com' ? (
-            <button onClick={() => setIsAdmin(!isAdmin)} className="bg-[#f4d1d1] px-6 py-2 rounded-full text-sm font-bold">
-              {isAdmin ? "Back to Survey" : "Admin Dashboard"}
-            </button>
-          ) : null
-        ) : (
-          <button onClick={loginAsAdmin} className="bg-[#e0e0e0] px-6 py-2 rounded-full text-sm font-bold">
-            Login
+          <button onClick={() => setIsAdmin(!isAdmin)} className="bg-[#5d4037] text-white px-4 py-1 text-sm">
+            {isAdmin ? "SURVEY" : "DASHBOARD"}
           </button>
+        ) : (
+          <button onClick={loginAsAdmin} className="border border-[#5d4037] px-4 py-1 text-sm">LOGIN</button>
         )}
       </div>
 
       {!isAdmin ? (
-        <div className="max-w-xl mx-auto bg-white p-10 rounded-[3rem] shadow-sm border border-[#f0e6e6]">
-          {step < questions.length ? (
-            <div>
-              <p className="text-xs text-[#a1887f] mb-4 font-bold tracking-widest uppercase">Question {step + 1} of 15</p>
-              <h2 className="text-2xl font-light mb-8">{questions[step].text}</h2>
-              {questions[step].options.map(opt => (
-                <button key={opt} onClick={() => setFormData({...formData, [questions[step].id]: opt})}
-                  className={`${aesthetic.button} ${formData[questions[step].id] === opt ? aesthetic.activeBtn : aesthetic.inactiveBtn}`}>
-                  {opt}
-                </button>
-              ))}
-              <div className="flex justify-between mt-10">
-                <button disabled={step === 0} onClick={() => setStep(step - 1)} className="text-sm underline opacity-50">Previous</button>
-                <button disabled={!formData[questions[step].id]} onClick={() => setStep(step + 1)} className="bg-[#5d4037] text-white px-8 py-3 rounded-full font-bold">Next</button>
+        <div className="max-w-2xl mx-auto space-y-8">
+          {/* Research Summary Section */}
+          <div className={aesthetic.window}>
+            <h3 className="font-bold mb-2">ABOUT THE RESEARCH</h3>
+            <p className="text-sm leading-relaxed">
+              This project analyzes the intersection of physical transit safety and digital privacy. 
+              By examining user behavioral data, we aim to bridge the gap between individual anxiety 
+              and institutional policy. Our goal is to create a safer, transparent ecosystem for all.
+            </p>
+          </div>
+
+          {/* Survey Window */}
+          <div className={aesthetic.window}>
+            <div className={aesthetic.windowHeader}>
+              <div className="w-3 h-3 rounded-full bg-red-400"></div>
+              <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
+              <div className="w-3 h-3 rounded-full bg-green-400"></div>
+              <span className="ml-auto text-xs opacity-50">survey.exe</span>
+            </div>
+            
+            {step < questions.length ? (
+              <div>
+                <h2 className="text-xl mb-6">{questions[step].text}</h2>
+                {questions[step].options.map(opt => (
+                  <button key={opt} onClick={() => setFormData({...formData, [questions[step].id]: opt})}
+                    className={`${aesthetic.button} ${formData[questions[step].id] === opt ? aesthetic.activeBtn : ''}`}>
+                    {opt}
+                  </button>
+                ))}
               </div>
-            </div>
-          ) : (
-            <div>
-              <h2 className="text-2xl font-light mb-6">Final Thought</h2>
-              <textarea onChange={(e) => setSuggestions(e.target.value)} className="w-full p-4 border border-[#f0e6e6] rounded-2xl mb-6 bg-[#fdfaf6]" placeholder="How would you improve safety infrastructure?" />
-              <button onClick={submitFinal} className="w-full bg-[#5d4037] text-white py-4 rounded-2xl font-bold">SUBMIT CONTRIBUTION</button>
-            </div>
-          )}
+            ) : (
+              <div>
+                <h2 className="text-xl mb-4">Final Thoughts</h2>
+                <textarea onChange={(e) => setSuggestions(e.target.value)} className="w-full p-4 border border-[#5d4037] mb-4 bg-transparent" placeholder="Improvement suggestions..." />
+                <button onClick={submitFinal} className="w-full bg-[#5d4037] text-white p-4 font-bold">SUBMIT DATA</button>
+              </div>
+            )}
+          </div>
         </div>
       ) : (
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-light text-[#8d6e63] mb-8">Insight Dashboard</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {questions.map(q => (
-              <div key={q.id} className="bg-white p-6 rounded-2xl shadow-sm border border-[#f0e6e6]">
-                <h4 className="font-bold text-sm mb-4">{q.text}</h4>
-                <ResponsiveContainer width="100%" height={200}>
-                  <PieChart>
-                    <Pie data={Object.entries(liveStats[q.id] || {}).map(([name, value]) => ({name, value}))} dataKey="value" nameKey="name" innerRadius={50} outerRadius={70}>
-                      {Object.entries(liveStats[q.id] || {}).map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
-                    </Pie>
-                    <Tooltip />
+        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+          {questions.map(q => (
+            <div key={q.id} className={aesthetic.window}>
+              <h4 className="font-bold text-xs mb-4 uppercase">{q.text}</h4>
+              <ResponsiveContainer width="100%" height={150}>
+                <PieChart>
+                  <Pie data={Object.entries(liveStats[q.id] || {}).map(([name, value]) => ({name, value}))} dataKey="value" innerRadius={40} outerRadius={60}>
+                    {Object.entries(liveStats[q.id] || {}).map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
                   </PieChart>
-                </ResponsiveContainer>
-              </div>
-            ))}
-          </div>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          ))}
         </div>
       )}
     </div>
