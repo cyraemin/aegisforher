@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #f5f3ff; /* Lavender aesthetic */
+}
+
+/* Sparkly interactive button effect */
+.sparkle-button {
+  transition: all 0.2s ease-in-out;
+}
+.sparkle-button:active {
+  transform: scale(0.95);
+  box-shadow: 0 0 15px #f472b6; /* Pink glow */
+}
