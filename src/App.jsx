@@ -24,7 +24,6 @@ const COLORS = ['#5d4037', '#8d6e63', '#a1887f', '#bcaaa4', '#d7ccc8'];
 
 const aesthetic = {
   container: "min-h-screen bg-[#fdfaf6] p-6 font-serif text-[#5d4037]",
-  card: "bg-white p-8 rounded-[2rem] shadow-sm border border-[#f0e6e6] mb-8",
   button: "w-full p-4 mb-3 rounded-2xl text-left border transition-all duration-300",
   activeBtn: "bg-[#f4d1d1] border-[#eec0c0] text-[#5d4037] font-bold",
   inactiveBtn: "bg-white hover:bg-[#fdfaf6] border-[#f0e6e6]"
@@ -89,10 +88,12 @@ export default function App() {
           <p className="text-xs uppercase tracking-[0.3em] text-[#a1887f]">Global Safety Research Project</p>
         </div>
         
-        {user?.email === 'tamsilsamira@gmail.com' ? (
-          <button onClick={() => setIsAdmin(!isAdmin)} className="bg-[#f4d1d1] px-6 py-2 rounded-full text-sm font-bold">
-            {isAdmin ? "Back to Survey" : "Admin Dashboard"}
-          </button>
+        {user ? (
+          user.email === 'tamsilsamira@gmail.com' ? (
+            <button onClick={() => setIsAdmin(!isAdmin)} className="bg-[#f4d1d1] px-6 py-2 rounded-full text-sm font-bold">
+              {isAdmin ? "Back to Survey" : "Admin Dashboard"}
+            </button>
+          ) : null
         ) : (
           <button onClick={loginAsAdmin} className="bg-[#e0e0e0] px-6 py-2 rounded-full text-sm font-bold">
             Login
@@ -127,7 +128,22 @@ export default function App() {
         </div>
       ) : (
         <div className="max-w-4xl mx-auto">
-          {/* Dashboard contents... */}
+          <h2 className="text-3xl font-light text-[#8d6e63] mb-8">Insight Dashboard</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {questions.map(q => (
+              <div key={q.id} className="bg-white p-6 rounded-2xl shadow-sm border border-[#f0e6e6]">
+                <h4 className="font-bold text-sm mb-4">{q.text}</h4>
+                <ResponsiveContainer width="100%" height={200}>
+                  <PieChart>
+                    <Pie data={Object.entries(liveStats[q.id] || {}).map(([name, value]) => ({name, value}))} dataKey="value" nameKey="name" innerRadius={50} outerRadius={70}>
+                      {Object.entries(liveStats[q.id] || {}).map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
