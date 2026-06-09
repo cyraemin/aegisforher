@@ -83,7 +83,6 @@ export default function App() {
 
   return (
     <div className={aesthetic.page}>
-      {/* Unified Aesthetic Header */}
       <div className="max-w-4xl mx-auto mb-12 flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-light text-[#7d6b62]">AEGIS FOR HER</h1>
@@ -101,7 +100,6 @@ export default function App() {
       <div className="max-w-xl mx-auto space-y-6">
         {!isAdmin ? (
           <>
-            {/* Research Context Card */}
             <div className={aesthetic.card}>
               <h3 className="font-bold mb-2 text-[#5d4037]">Research Overview</h3>
               <p className="text-sm leading-relaxed opacity-80 italic">
@@ -110,7 +108,6 @@ export default function App() {
               </p>
             </div>
 
-            {/* Survey Interaction Card */}
             <div className={aesthetic.card}>
               {step < questions.length ? (
                 <div>
@@ -122,6 +119,10 @@ export default function App() {
                       {opt}
                     </button>
                   ))}
+                  <div className="flex justify-between mt-10">
+                    <button disabled={step === 0} onClick={() => setStep(step - 1)} className="text-sm underline opacity-50 hover:opacity-100 transition-opacity">Previous</button>
+                    <button disabled={!formData[questions[step].id]} onClick={() => setStep(step + 1)} className="bg-[#7d6b62] text-white px-8 py-3 rounded-full font-bold hover:bg-[#5d4037] transition-all disabled:opacity-30">Next</button>
+                  </div>
                 </div>
               ) : (
                 <div>
@@ -133,7 +134,6 @@ export default function App() {
             </div>
           </>
         ) : (
-          /* Insight Dashboard View */
           <div className="space-y-6">
             <h2 className="text-2xl text-[#7d6b62]">Insight Dashboard</h2>
             {questions.map(q => (
