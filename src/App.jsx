@@ -22,13 +22,12 @@ const questions = [
 
 const COLORS = ['#f4d1d1', '#c8e6c9', '#fff9c4', '#b3e5fc', '#d1c4e9'];
 
-// Retro-aesthetic classes
 const aesthetic = {
-  page: "min-h-screen bg-[#fdfaf6] p-6 font-mono text-[#5d4037]",
-  window: "bg-[#fffef9] border-2 border-[#5d4037] shadow-[8px_8px_0px_0px_rgba(93,64,55,0.2)] p-6 rounded-sm",
-  windowHeader: "flex items-center gap-2 mb-6 border-b-2 border-[#5d4037] pb-2",
-  button: "w-full p-3 border border-[#5d4037] hover:bg-[#f4d1d1] transition-all text-left mb-2",
-  activeBtn: "bg-[#f4d1d1] font-bold"
+  page: "min-h-screen bg-[#fdfaf6] p-6 md:p-12 font-serif text-[#7d6b62]",
+  card: "bg-[#fffefb] p-8 rounded-[2rem] shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-[#efe9e3]",
+  button: "w-full p-4 mb-3 rounded-2xl text-left border border-[#efe9e3] hover:bg-[#fcf3f3] transition-all duration-300",
+  activeBtn: "bg-[#f4d1d1] border-[#eec0c0] font-bold text-[#5d4037]",
+  navButton: "px-6 py-2 rounded-full border border-[#efe9e3] hover:bg-[#fcf3f3] text-sm transition-all"
 };
 
 export default function App() {
@@ -84,78 +83,75 @@ export default function App() {
 
   return (
     <div className={aesthetic.page}>
-      {/* Navbar/Header */}
-      <div className="max-w-4xl mx-auto mb-8 flex justify-between items-end border-b-4 border-[#5d4037] pb-4">
+      {/* Unified Aesthetic Header */}
+      <div className="max-w-4xl mx-auto mb-12 flex justify-between items-center">
         <div>
-          <h1 className="text-4xl font-bold tracking-tighter">AEGIS RESEARCH</h1>
-          <p className="text-sm">Global Safety & Digital Integrity Project</p>
+          <h1 className="text-3xl font-light text-[#7d6b62]">AEGIS FOR HER</h1>
+          <p className="text-[10px] uppercase tracking-[0.3em] mt-1 text-[#bcaaa4]">Research & Safety Initiative</p>
         </div>
         {user ? (
-          <button onClick={() => setIsAdmin(!isAdmin)} className="bg-[#5d4037] text-white px-4 py-1 text-sm">
-            {isAdmin ? "SURVEY" : "DASHBOARD"}
+          <button onClick={() => setIsAdmin(!isAdmin)} className={aesthetic.navButton}>
+            {isAdmin ? "Back to Survey" : "Admin Dashboard"}
           </button>
         ) : (
-          <button onClick={loginAsAdmin} className="border border-[#5d4037] px-4 py-1 text-sm">LOGIN</button>
+          <button onClick={loginAsAdmin} className={aesthetic.navButton}>Login</button>
         )}
       </div>
 
-      {!isAdmin ? (
-        <div className="max-w-2xl mx-auto space-y-8">
-          {/* Research Summary Section */}
-          <div className={aesthetic.window}>
-            <h3 className="font-bold mb-2">ABOUT THE RESEARCH</h3>
-            <p className="text-sm leading-relaxed">
-              This project analyzes the intersection of physical transit safety and digital privacy. 
-              By examining user behavioral data, we aim to bridge the gap between individual anxiety 
-              and institutional policy. Our goal is to create a safer, transparent ecosystem for all.
-            </p>
-          </div>
+      <div className="max-w-xl mx-auto space-y-6">
+        {!isAdmin ? (
+          <>
+            {/* Research Context Card */}
+            <div className={aesthetic.card}>
+              <h3 className="font-bold mb-2 text-[#5d4037]">Research Overview</h3>
+              <p className="text-sm leading-relaxed opacity-80 italic">
+                Our research focuses on the intersection of digital privacy and physical transit safety. 
+                By mapping user experiences, we strive to build a more secure world, one contribution at a time.
+              </p>
+            </div>
 
-          {/* Survey Window */}
-          <div className={aesthetic.window}>
-            <div className={aesthetic.windowHeader}>
-              <div className="w-3 h-3 rounded-full bg-red-400"></div>
-              <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-              <div className="w-3 h-3 rounded-full bg-green-400"></div>
-              <span className="ml-auto text-xs opacity-50">survey.exe</span>
+            {/* Survey Interaction Card */}
+            <div className={aesthetic.card}>
+              {step < questions.length ? (
+                <div>
+                  <p className="text-[10px] uppercase mb-6 tracking-widest opacity-60">Question {step + 1} / 15</p>
+                  <h2 className="text-xl mb-8 text-[#5d4037]">{questions[step].text}</h2>
+                  {questions[step].options.map(opt => (
+                    <button key={opt} onClick={() => setFormData({...formData, [questions[step].id]: opt})}
+                      className={`${aesthetic.button} ${formData[questions[step].id] === opt ? aesthetic.activeBtn : ''}`}>
+                      {opt}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div>
+                  <h2 className="text-xl mb-4 text-[#5d4037]">Final Thoughts</h2>
+                  <textarea onChange={(e) => setSuggestions(e.target.value)} className="w-full p-4 border border-[#efe9e3] rounded-2xl mb-6 bg-[#fdfaf6]" placeholder="Share your vision..." />
+                  <button onClick={submitFinal} className="w-full bg-[#7d6b62] text-white py-4 rounded-2xl font-bold hover:bg-[#5d4037] transition-all">SUBMIT</button>
+                </div>
+              )}
             </div>
-            
-            {step < questions.length ? (
-              <div>
-                <h2 className="text-xl mb-6">{questions[step].text}</h2>
-                {questions[step].options.map(opt => (
-                  <button key={opt} onClick={() => setFormData({...formData, [questions[step].id]: opt})}
-                    className={`${aesthetic.button} ${formData[questions[step].id] === opt ? aesthetic.activeBtn : ''}`}>
-                    {opt}
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <div>
-                <h2 className="text-xl mb-4">Final Thoughts</h2>
-                <textarea onChange={(e) => setSuggestions(e.target.value)} className="w-full p-4 border border-[#5d4037] mb-4 bg-transparent" placeholder="Improvement suggestions..." />
-                <button onClick={submitFinal} className="w-full bg-[#5d4037] text-white p-4 font-bold">SUBMIT DATA</button>
-              </div>
-            )}
-          </div>
-        </div>
-      ) : (
-        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-          {questions.map(q => (
-            <div key={q.id} className={aesthetic.window}>
-              <h4 className="font-bold text-xs mb-4 uppercase">{q.text}</h4>
-              <ResponsiveContainer width="100%" height={150}>
-                <PieChart>
-                  <Pie data={Object.entries(liveStats[q.id] || {}).map(([name, value]) => ({name, value}))} dataKey="value" innerRadius={40} outerRadius={60}>
-                    {Object.entries(liveStats[q.id] || {}).map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
+          </>
+        ) : (
+          /* Insight Dashboard View */
+          <div className="space-y-6">
+            <h2 className="text-2xl text-[#7d6b62]">Insight Dashboard</h2>
+            {questions.map(q => (
+              <div key={q.id} className={aesthetic.card}>
+                <h4 className="font-bold text-sm mb-4 uppercase tracking-wider">{q.text}</h4>
+                <ResponsiveContainer width="100%" height={150}>
+                  <PieChart>
+                    <Pie data={Object.entries(liveStats[q.id] || {}).map(([name, value]) => ({name, value}))} dataKey="value" innerRadius={40} outerRadius={60}>
+                      {Object.entries(liveStats[q.id] || {}).map((entry, index) => <Cell key={index} fill={COLORS[index % COLORS.length]} />)}
+                    </Pie>
+                    <Tooltip />
                   </PieChart>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          ))}
-        </div>
-      )}
+                </ResponsiveContainer>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
